@@ -6,11 +6,11 @@ function lineTotal(item) {
 }
 
 function subtotal(items) {
-  let total = 0;
+  let runningTotal = 0;
   for (const item of items) {
-    total += lineTotal(item);
+    runningTotal += lineTotal(item);
   }
-  return total;
+  return runningTotal;
 }
 
 function invoiceTotal(items, region) {
