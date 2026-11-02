@@ -5,12 +5,16 @@ function lineTotal(item) {
   return item.price * item.quantity;
 }
 
-function subtotal(items) {
+function sumLines(items) {
   let total = 0;
   for (const item of items) {
     total += lineTotal(item);
   }
   return total;
+}
+
+function subtotal(items) {
+  return sumLines(items);
 }
 
 function invoiceTotal(items, region) {
