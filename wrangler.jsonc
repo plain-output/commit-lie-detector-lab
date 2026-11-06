@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "commit-lie-detector",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "ai": { "binding": "AI" },
+  "kv_namespaces": [
+    { "binding": "CACHE", "id": "95b0269eedde4236bcbd784806df8ec6" }
+  ],
+  // Both limiters only guard cache misses, which are what spend GitHub quota and AI neurons.
+  "ratelimits": [
+    { "name": "MISS_LIMIT_PER_IP", "namespace_id": "4101", "simple": { "limit": 20, "period": 60 } },
+    { "name": "MISS_LIMIT_GLOBAL", "namespace_id": "4102", "simple": { "limit": 60, "period": 60 } }
+  ],
+  "vars": {
+    // Soft ceiling on model calls per UTC day, so a public endpoint cannot run up the AI bill.
+    "DAILY_AI_CALL_LIMIT": "300"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.05 }
+  }
+  // Optional secret: GITHUB_TOKEN (wrangler secret put GITHUB_TOKEN).
+  // Use a token with public-repository read access only, because this API is public.
+}
